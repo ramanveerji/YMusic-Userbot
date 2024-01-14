@@ -23,34 +23,31 @@ async def ytdl(link):
         stderr=asyncio.subprocess.PIPE,
     )
     stdout, stderr = await proc.communicate()
-    if stdout:
-        return 1, stdout.decode().split("\n")[0]
-    else:
-        return 0, stderr.decode()
+    return (1, stdout.decode().split("\n")[0]) if stdout else (0, stderr.decode())
 
 
 @app.on_message(filters.command(VIDEO_PLAY, PREFIX))
-async def _vPlay(_, message) :
-	start_time = time.time()
-	if (len(message.command)) < 2 :
-		await message.reply_text("Sale Link To Dal De")
-	else :
-		m = await message.reply_text("Downloading...")
-		query = message.text.split(" ", 1)[1]
-		title, duration, link = ytDetails.searchYt(query)
-		resp, ytlink = await ytdl(link)
-		if resp == 0:
-			await m.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
-		else :
-			Status, Text = await userbot.playVideo(message.chat.id, ytlink)
-			if Status == False :
-				await m.edit(Text)
-			else :
-				if duration is None :
-					duration = "Playing From LiveStream"
-				finish_time = time.time()
-				total_time_taken = str(int(finish_time - start_time)) + "s"
-				await m.edit(f"Playing Your Song\n\nSongName:- [{title[:19]}]({link})\nDuration:- {duration}\nTime taken to play:- {total_time_taken}", disable_web_page_preview=True)
+async def _vPlay(_, message):
+    start_time = time.time()
+    if (len(message.command)) < 2:
+        await message.reply_text("Sale Link To Dal De")
+    else:
+        m = await message.reply_text("Downloading...")
+        query = message.text.split(" ", 1)[1]
+        title, duration, link = ytDetails.searchYt(query)
+        resp, ytlink = await ytdl(link)
+        if resp == 0:
+            await m.edit(f"❌ yt-dl issues detected\n\n» `{ytlink}`")
+        else:
+            Status, Text = await userbot.playVideo(message.chat.id, ytlink)
+            if Status == False:
+                await m.edit(Text)
+            else:
+                if duration is None :
+                	duration = "Playing From LiveStream"
+                finish_time = time.time()
+                total_time_taken = f"{int(finish_time - start_time)}s"
+                await m.edit(f"Playing Your Song\n\nSongName:- [{title[:19]}]({link})\nDuration:- {duration}\nTime taken to play:- {total_time_taken}", disable_web_page_preview=True)
 		
 
 

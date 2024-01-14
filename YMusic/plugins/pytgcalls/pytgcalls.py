@@ -13,11 +13,9 @@ from YMusic.utils.loop import get_loop, set_loop
 import time
 
 
-async def _skip(chat_id) :
+async def _skip(chat_id):
 	loop = await get_loop(chat_id)
-	if loop == 0 :
-		pass
-	else :
+	if loop != 0:
 		try :
 			chat_queue = get_queue(chat_id)
 			loop = loop - 1
@@ -74,12 +72,12 @@ async def handler(client: PyTgCalls, update: Update):
 	start_time = time.time()
 	chat_id = update.chat_id
 	resp = await _skip(chat_id)
-	if resp == 1 :
+	if resp == 1:
 		pass
 	elif resp[0] == 2 :
 		await app.send_message(chat_id, resp[1])
-	else :
-		total_time_taken = str(int(start_time - resp[3])) + "s"
+	else:
+		total_time_taken = f"{int(start_time - resp[3])}s"
 		await app.send_message(chat_id, f"Playing Your Song\n\nSongName:- [{resp[0]}]({resp[2]})\nDuration:- {resp[1]}\nTime taken to play:- {total_time_taken}", disable_web_page_preview=True)
 
 
