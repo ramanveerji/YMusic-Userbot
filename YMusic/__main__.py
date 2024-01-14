@@ -14,10 +14,10 @@ async def init():
 
 	await app.start()
 	LOGGER("YMusic").info("Account Started Successfully")
-	
+
 	for all_module in ALL_MODULES:
-		importlib.import_module("YMusic.plugins" + all_module)
-		
+		importlib.import_module(f"YMusic.plugins{all_module}")
+
 	LOGGER("YMusic.plugins").info("Successfully Imported Modules")
 	await call.start()
 	await idle()
